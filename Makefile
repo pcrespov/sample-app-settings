@@ -8,17 +8,27 @@ devenv: .env
 	# now set source .venv/bin/activate
 
 
-.env: .env-sample-1
+.env: .env-sample
 	cp $< $@
 
 
-.PHONY: demo
-demo: .env
-	# A demo for the impatient
 
-	# Help here
+.PHONY: demo
+demo: .env ## A demo for the impatient
 	python app --help
 
-	# And print env file here ------------
-	python app -E
+	#
+	# Resolves settings and print an envfile --------------
+	#
+	python app settings --verbose
 
+	#
+	# Now compact -----------------------------------------
+	#
+	python app settings --verbose --compact
+
+
+	#
+	# Now json --------------------------------------------
+	#
+	python app settings --as-json

@@ -8,49 +8,56 @@ from pydantic.env_settings import BaseSettings
 
 from app_settings import Settings
 
-log = logging.getLogger()
-
 HEADER = "{:-^50}"
 
 
-def print_envs(settings_obj):
+log = logging.getLogger()
+main = typer.Typer(name="Sample-App")
+
+
+def print_as_envfile(settings_obj, *, compact, verbose):
     for name in settings_obj.__fields__:
         value = getattr(settings_obj, name)
+
         if isinstance(value, BaseSettings):
-            typer.echo(f"\n# {name}")
-            print_envs(value)
-        else:
+            if compact:
+                value = value.json()  # flat
+            else:
+                if verbose:
+                    typer.echo(f"\n# --- {name} --- ")
+                print_as_envfile(value, compact=False, verbose=verbose)
+                continue
+
+        if verbose:
             field_info = settings_obj.__fields__[name].field_info
             if field_info.description:
                 typer.echo(f"# {field_info.description}")
-            typer.echo(f"{name}={value}")
+
+        typer.echo(f"{name}={value}")
 
 
-def print_as_json(settings_obj):
-    typer.echo(settings_obj.json(indent=2))
+def print_as_json(settings_obj, *, compact=False):
+    typer.echo(settings_obj.json(indent=2 if not compact else 0))
 
 
-def main(
-    print_settings_env: bool = typer.Option(
-        False,
-        "-E",
-        "--print-settings-env",
-        help="Resolves settings, prints env vars and exits",
-    ),
-    print_settings_json: bool = False,
-    print_settings_json_schema: bool = False,
+@main.command()
+def settings(
+    as_json: bool = False,
+    as_json_schema: bool = False,
+    compact: bool = typer.Option(False, help="Print compact form"),
+    verbose: bool = False,
 ):
-    """A 12-factor app CLI"""
+    """Resolves app settings and prints them in a given format"""
 
-    if print_settings_json_schema:
-        typer.echo(Settings.schema_json(indent=2))
+    if as_json_schema:
+        typer.echo(Settings.schema_json(indent=2 if not compact else 0))
         return
 
     try:
-        settings = Settings.create_from_env()
+        settings_obj = Settings.create_from_env()
 
     except ValidationError as err:
-        json_schema = Settings.schema_json(indent=2)
+        settings_schema = Settings.schema_json(indent=2)
         log.error(
             "Invalid application settings. Typically an environment variable is missing or mistyped :\n%s",
             "\n".join(
@@ -62,23 +69,22 @@ def main(
                         {k: v for k, v in dict(os.environ).items() if k.upper() == k}
                     ),
                     HEADER.format("json-schema"),
-                    json_schema,
+                    settings_schema,
                 ]
             ),
             exc_info=False,
         )
         raise
 
-    if print_settings_json:
-        print_as_json(settings)
-        return
-
-    if print_settings_env:
-        print_envs(settings)
-        return
-
-    typer.secho("Running app ... ", fg=typer.colors.GREEN)
+    if as_json:
+        print_as_json(settings_obj, compact=compact)
+    else:
+        print_as_envfile(settings_obj, compact=compact, verbose=verbose)
 
 
-run = typer.Typer()
-run.command()(main)
+@main.command()
+def run():
+    typer.secho("Starting app ... ")
+    typer.secho("Resolving settings ...", nl=False)
+    settings_obj = Settings.create_from_env()
+    typer.secho("DONE", fg=typer.colors.GREEN)
