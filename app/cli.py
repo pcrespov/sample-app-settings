@@ -37,7 +37,7 @@ def print_as_envfile(settings_obj, *, compact, verbose):
 
 
 def print_as_json(settings_obj, *, compact=False):
-    typer.echo(settings_obj.json(indent=2 if not compact else 0))
+    typer.echo(settings_obj.json(indent=None if compact else 2))
 
 
 @main.command()
@@ -47,10 +47,10 @@ def settings(
     compact: bool = typer.Option(False, help="Print compact form"),
     verbose: bool = False,
 ):
-    """Resolves app settings and prints them in a given format"""
+    """Resolves settings and prints envfile"""
 
     if as_json_schema:
-        typer.echo(Settings.schema_json(indent=2 if not compact else 0))
+        typer.echo(Settings.schema_json(indent=0 if compact else 2))
         return
 
     try:
@@ -84,6 +84,7 @@ def settings(
 
 @main.command()
 def run():
+    """Emulates run"""
     typer.secho("Starting app ... ")
     typer.secho("Resolving settings ...", nl=False)
     settings_obj = Settings.create_from_env()
