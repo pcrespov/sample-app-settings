@@ -15,9 +15,10 @@ devenv: .env
 .PHONY: demo
 demo: .env
 	# A demo for the impatient
-	
+
 	# Help here
-	python app/cli.py --help
+	python app --help
 
 	# And print env file here ------------
-	python app/cli.py -E
+	python app -E
+

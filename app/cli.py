@@ -1,9 +1,6 @@
 import logging
 import os
-import sys
-from pathlib import Path
 from pprint import pformat
-from typing import Optional
 
 import typer
 from pydantic import ValidationError
@@ -14,6 +11,7 @@ from app_settings import Settings
 log = logging.getLogger()
 
 HEADER = "{:-^50}"
+
 
 def print_envs(settings_obj):
     for name in settings_obj.__fields__:
@@ -60,21 +58,27 @@ def main(
                     HEADER.format("detail"),
                     str(err),
                     HEADER.format("environment variables"),
-                    pformat({ k:v for k,v in dict(os.environ).items() if k.upper() == k } ),
+                    pformat(
+                        {k: v for k, v in dict(os.environ).items() if k.upper() == k}
+                    ),
                     HEADER.format("json-schema"),
                     json_schema,
                 ]
             ),
             exc_info=False,
         )
-        raise 
+        raise
 
     if print_settings_json:
         print_as_json(settings)
+        return
 
     if print_settings_env:
         print_envs(settings)
+        return
+
+    typer.secho("Running app ... ", fg=typer.colors.GREEN)
 
 
-if __name__ == "__main__":
-    typer.run(main)
+run = typer.Typer()
+run.command()(main)
