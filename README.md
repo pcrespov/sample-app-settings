@@ -4,18 +4,24 @@ A [twelve-factor] app [stores config in environment variables](https://12factor.
 
 ## Requirements: 
 
-- app config defined as [pydantic] ``BaseSettings`` constructed exclusively via *envs* and *secrets*. 
-    - NOTE that ``BaseSettings`` has other construction mechanisms but we will intentionally avoid using them
-- the entire app config is defined in ``Settings``
-    - each app submodule might define its own ``BaseSettings`` class but they are added as sections in the app ``Settings``
+- app's configuration is stored in a [pydantic] ``Settings`` instance 
+  - ``Settings`` instance automatically captures *envs* and *secrets* upon construction
+  - Note that any other construction mechanisms is intentionally avoided
+- a sigle ``Settings`` per app initialized upon startup
+    - each app submodule might define its own ``BaseSettings`` class but instances are added as sections in the app ``Settings`` and initialized at the same time
 - fields are *const* after construction (i.e. frozen or faux-immutable in python jargon)
 - field names are **capitalized** to simplify identifying the corresponding env name (multiple env captures must be really justified)
-- CLI
-    - can print *envfiles* or json configuration files via the CLI
+- CLI can print *envfiles* or json configurations
+
 
 ## Demo
 
-This app defines the following settings
+This app assumes three modules:
+  - **postgres** is a common module so the app uses the settings provided in ``settingslib``
+  - **mod1** and **mod2** are two custom modules with arbitrary settings
+
+Assuming that all required envs are in place (e.g. rename any of the ``.env-*`` samples  as ``.env``) we can display the 
+configuration resolved by the app:
 
 ```commandline
 $ python app settings --as-json      
