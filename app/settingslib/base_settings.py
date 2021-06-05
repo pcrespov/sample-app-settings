@@ -1,12 +1,14 @@
-from pydantic import Extra, BaseSettings
-from typing import Tuple, List
-# https://pydantic-docs.helpmanual.io/usage/model_config/
-
 from contextlib import suppress
-from pydantic import ValidationError
+from typing import List, Tuple
+
+from pydantic import BaseSettings, Extra, ValidationError
+
+
 class BaseCustomSettings(BaseSettings):
     class Config:
-        env_file = '.env'
+        # MORE in: https://pydantic-docs.helpmanual.io/usage/model_config/
+
+        env_file = '.env' # This is convenient to set .env for demo purposes but should not be there in the final version
         case_sensitive = False
         extra = Extra.forbid
         allow_mutation = False
@@ -14,7 +16,7 @@ class BaseCustomSettings(BaseSettings):
         validate_all = True
 
     @classmethod
-    def set_defaults(cls,  default_fields: List[ Tuple[str, "BaseCustomSettings"] ]):
+    def set_defaults_with_default_constructors(cls,  default_fields: List[ Tuple[str, "BaseCustomSettings"] ]):
         assert issubclass(cls, BaseCustomSettings)
         
         # Builds defaults at this point

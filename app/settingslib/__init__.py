@@ -1,1 +1,1 @@
-""" Some library with common settings """
+""" Some library with common settings (e.g. postgres) and a customized base settings class """

@@ -10,3 +10,14 @@ devenv: .env
 
 .env: .env-sample-1
 	cp $< $@
+
+
+.PHONY: demo
+demo: .env
+	# A demo for the impatient
+	
+	# Help here
+	python app/cli.py --help
+
+	# And print env file here ------------
+	python app/cli.py -E

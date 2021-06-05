@@ -7,16 +7,17 @@ from settingslib.postgres import PostgresSettings
 from pydantic import Field
 
 class Settings(BaseCustomSettings):
+    """ The app settings """
     APP_HOST: str
     APP_PORT: int = 3
 
     APP_POSTGRES: PostgresSettings
-    APP_MODULE_1: MyModuleSettings = Field(None, description="Some Module Example")
+    APP_MODULE_1: MyModuleSettings = Field(..., description="Some Module Example")
     APP_MODULE_2: AnotherModuleSettings
 
     @classmethod
     def create_from_env(cls) -> "Settings":
-        cls.set_defaults(
+        cls.set_defaults_with_default_constructors(
             [
                 ("APP_POSTGRES", PostgresSettings),
                 ("APP_MODULE_1", MyModuleSettings),

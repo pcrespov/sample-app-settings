@@ -1,4 +1,8 @@
+# real dependencies
 pydantic[dotenv]
+typer
+colorama
 
-# tooling
+
+# dev tooling
 black
