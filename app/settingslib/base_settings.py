@@ -6,9 +6,9 @@ from pydantic import BaseSettings, Extra, ValidationError
 
 class BaseCustomSettings(BaseSettings):
     class Config:
-        # MORE in: https://pydantic-docs.helpmanual.io/usage/model_config/
+        # SEE https://pydantic-docs.helpmanual.io/usage/model_config/
 
-        env_file = '.env' # This is convenient to set .env for demo purposes but should not be there in the final version
+        env_file = ".env"  # This is convenient to set .env for demo purposes but should not be there in the final version
         case_sensitive = False
         extra = Extra.forbid
         allow_mutation = False
@@ -16,9 +16,17 @@ class BaseCustomSettings(BaseSettings):
         validate_all = True
 
     @classmethod
-    def set_defaults_with_default_constructors(cls,  default_fields: List[ Tuple[str, "BaseCustomSettings"] ]):
+    def set_defaults_with_default_constructors(
+        cls, default_fields: List[Tuple[str, "BaseCustomSettings"]]
+    ):
+        # This funcion can set defaults on fields that are BaseSettings as well
+        # It is used in control construction of defaults.
+        # Pydantic offers a defaults_factory but it is executed upon creation of the Settings **class**
+        # which is too early for our purpose. Instead, we want to create the defaults just
+        # before the settings instance is constructed
+
         assert issubclass(cls, BaseCustomSettings)
-        
+
         # Builds defaults at this point
         for name, default_cls in default_fields:
             with suppress(ValidationError):

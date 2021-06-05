@@ -4,9 +4,7 @@ from pydantic import (
     PostgresDsn,
     Field,
     validator,
-    BaseSettings,
 )
-from typing import Optional
 from .base_settings import BaseCustomSettings
 
 PortInt = conint(gt=0, lt=65535)
@@ -40,7 +38,6 @@ class PostgresSettings(BaseCustomSettings):
                 f"assert POSTGRES_MINSIZE={values['POSTGRES_MINSIZE']} <= POSTGRES_MAXSIZE={v}"
             )
         return v
-
 
     # HELPERS ---
 

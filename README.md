@@ -14,6 +14,10 @@ A [twelve-factor] app [stores config in environment variables](https://12factor.
 - can print an .env list via the CLI
 
 
+## Features
+
+- A [typer] CLI
+- 
 
 ## References
 
@@ -23,3 +27,4 @@ A [twelve-factor] app [stores config in environment variables](https://12factor.
 
  [twelve-factor]:https://12factor.net
  [pydantic]:https://pydantic-docs.helpmanual.io/
+ [typer]:https://typer.tiangolo.com/

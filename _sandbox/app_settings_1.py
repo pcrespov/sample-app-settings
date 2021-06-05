@@ -12,7 +12,7 @@ def create_settings_class():
     # controls when environs for subsettings are captured
 
     class Settings(BaseSettings):
-        """ Main application settings """
+        """Main application settings"""
 
         host: str
         port: int
@@ -45,7 +45,7 @@ def create_factory():
 
     # attach some attributes to the Functor
     create.Settings = Settings
-    create.create = create # syntax sweetener
+    create.create = create  # syntax sweetener
     return create
 
 
@@ -86,6 +86,7 @@ class Settings2(BaseSettings):
             if f"STORAGE_{name.upper()}" not in os.environ:
                 defaults[name] = default_cls()
         return cls(**defaults)
+
 
 ################################################################################################
 

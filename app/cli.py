@@ -13,6 +13,7 @@ from app_settings import Settings
 
 log = logging.getLogger()
 
+HEADER = "{:-^50}"
 
 def print_envs(settings_obj):
     for name in settings_obj.__fields__:
@@ -51,18 +52,22 @@ def main(
         settings = Settings.create_from_env()
 
     except ValidationError as err:
-
-        HEADER = "{:-^50}"
+        json_schema = Settings.schema_json(indent=2)
         log.error(
-            "Invalid settings. %s:",
-            err,
-            # HEADER.format("schema"),
-            # Settings.schema_json(indent=2),
-            # HEADER.format("environment variables"),
-            # pformat(dict(os.environ)),
+            "Invalid application settings. Typically an environment variable is missing or mistyped :\n%s",
+            "\n".join(
+                [
+                    HEADER.format("detail"),
+                    str(err),
+                    HEADER.format("environment variables"),
+                    pformat({ k:v for k,v in dict(os.environ).items() if k.upper() == k } ),
+                    HEADER.format("json-schema"),
+                    json_schema,
+                ]
+            ),
             exc_info=False,
         )
-        raise RuntimeError(os.EX_DATAERR)
+        raise 
 
     if print_settings_json:
         print_as_json(settings)

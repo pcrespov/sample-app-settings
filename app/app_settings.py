@@ -1,4 +1,3 @@
-
 from modules.mod1_settings import MyModuleSettings
 from modules.mod2_settings import AnotherModuleSettings
 from settingslib.base_settings import BaseCustomSettings
@@ -6,8 +5,10 @@ from settingslib.postgres import PostgresSettings
 
 from pydantic import Field
 
+
 class Settings(BaseCustomSettings):
-    """ The app settings """
+    """The app settings"""
+
     APP_HOST: str
     APP_PORT: int = 3
 
