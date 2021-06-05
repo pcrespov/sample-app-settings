@@ -1,11 +1,12 @@
 
 
-.venv:
-	python3 -m pip install -U pip setuptools wheel
-	python3 -m pip install -m venv .venv
+.PHONY: devenv
+devenv: .env
+	python3 -m venv .venv
+	.venv/bin/pip install -U pip
+	.venv/bin/pip install -r requirements.txt
 	# now set source .venv/bin/activate
 
-install:
-	.venv/bin/python -m  install -r requirements.txt
 
-	
+.env: .env-sample-1
+	cp $< $@

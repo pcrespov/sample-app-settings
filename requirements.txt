@@ -1,1 +1,4 @@
 pydantic[dotenv]
+
+# tooling
+black
