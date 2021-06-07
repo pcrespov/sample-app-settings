@@ -1,10 +1,16 @@
 # App settings
 
-A [twelve-factor] app [stores config in environment variables](https://12factor.net/config) (often shortened to *env vars* or *env*)
 
-## Requirements: 
+- A [twelve-factor] app [stores config in environment variables](https://12factor.net/config) (often shortened to *env vars* or *env*)
+- Every deployment uses a different configuration which is defined in a envfile or with secrets (see e.g. https://github.com/ITISFoundation/osparc-ops/tree/master/services/simcore)
+- The variables in the configuration might change with different app versions (adds/removes/modifies)
+  - Need an easy way to reproduce envfiles
 
-- app's configuration is stored in a [pydantic] ``Settings`` instance 
+
+
+## Requirements:
+
+- app's configuration is stored in a [pydantic] ``Settings`` instance
   - ``Settings`` instance automatically captures *envs* and *secrets* upon construction
   - Note that any other construction mechanisms is intentionally avoided
 - a sigle ``Settings`` per app initialized upon startup
@@ -20,11 +26,11 @@ This app assumes three modules:
   - **postgres** is a common module so the app uses the settings provided in ``settingslib``
   - **mod1** and **mod2** are two custom modules with arbitrary settings
 
-Assuming that all required envs are in place (e.g. rename any of the ``.env-*`` samples  as ``.env``) we can display the 
+Assuming that all required envs are in place (e.g. rename any of the ``.env-*`` samples  as ``.env``) we can display the
 configuration resolved by the app:
 
 ```commandline
-$ python app settings --as-json      
+$ python app settings --as-json
 
 {
   "APP_HOST": "localhost",
@@ -50,7 +56,7 @@ $ python app settings --as-json
 Can actually get the json-schema as
 
 ```commandline
-python app settings --as-json-schema       
+python app settings --as-json-schema
 
 {
   "title": "Settings",
@@ -60,18 +66,18 @@ python app settings --as-json-schema
     "APP_HOST": {
       "title": "App Host",
 ...
-``` 
+```
 
 
 The app captures the ``Settings`` from the *env vars* and it can be printed as an *envfile*
 
 ```commandline
-$ python app settings --verbose 
+$ python app settings --verbose
 
 APP_HOST=localhost
 APP_PORT=80
 
-# --- APP_POSTGRES --- 
+# --- APP_POSTGRES ---
 POSTGRES_HOST=localhost
 POSTGRES_PORT=5432
 POSTGRES_USER=foo
@@ -83,11 +89,11 @@ POSTGRES_MINSIZE=1
 # Minimum number of connections in the pool
 POSTGRES_MAXSIZE=50
 
-# --- APP_MODULE_1 --- 
+# --- APP_MODULE_1 ---
 # Some value for module 1
 MYMODULE_VALUE=10
 
-# --- APP_MODULE_2 --- 
+# --- APP_MODULE_2 ---
 MYMODULE2_SOME_OTHER_VALUE=33
 ```
 
