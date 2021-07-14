@@ -15,14 +15,3 @@ class Settings(BaseCustomSettings):
     APP_POSTGRES: PostgresSettings
     APP_MODULE_1: MyModuleSettings = Field(..., description="Some Module Example")
     APP_MODULE_2: AnotherModuleSettings
-
-    @classmethod
-    def create_from_env(cls) -> "Settings":
-        cls.set_defaults_with_default_constructors(
-            [
-                ("APP_POSTGRES", PostgresSettings),
-                ("APP_MODULE_1", MyModuleSettings),
-                ("APP_MODULE_2", AnotherModuleSettings),
-            ]
-        )
-        return cls()

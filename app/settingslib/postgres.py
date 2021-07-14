@@ -1,10 +1,7 @@
-from pydantic import (
-    SecretStr,
-    conint,
-    PostgresDsn,
-    Field,
-    validator,
-)
+from functools import cached_property
+
+from pydantic import Field, PostgresDsn, SecretStr, conint, validator
+
 from .base_settings import BaseCustomSettings
 
 PortInt = conint(gt=0, lt=65535)
@@ -41,6 +38,7 @@ class PostgresSettings(BaseCustomSettings):
 
     # HELPERS ---
 
+    @cached_property
     def dsn(self):
         return PostgresDsn.build(
             scheme="postgresql",

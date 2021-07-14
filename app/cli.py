@@ -54,7 +54,7 @@ def settings(
         return
 
     try:
-        settings_obj = Settings.create_from_env()
+        settings_obj = Settings.create_from_envs()
 
     except ValidationError as err:
         settings_schema = Settings.schema_json(indent=2)
