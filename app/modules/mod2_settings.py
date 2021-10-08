@@ -1,4 +1,4 @@
-from settingslib.base_settings import BaseCustomSettings
+from settings_library.base import BaseCustomSettings
 
 
 class AnotherModuleSettings(BaseCustomSettings):

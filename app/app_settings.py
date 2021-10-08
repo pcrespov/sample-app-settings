@@ -1,10 +1,9 @@
 from modules.mod1_settings import MyModuleSettings
 from modules.mod2_settings import AnotherModuleSettings
-from settingslib.base_settings import BaseCustomSettings
-from settingslib.postgres import PostgresSettings
 
 from pydantic import Field
-
+from settings_library.base import BaseCustomSettings
+from settings_library.postgres import PostgresSettings
 
 class Settings(BaseCustomSettings):
     """The app settings"""

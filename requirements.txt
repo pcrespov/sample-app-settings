@@ -6,3 +6,5 @@ colorama
 
 # dev tooling
 black
+
+simcore-settings-library @ git+https://github.com/ITISFoundation/osparc-simcore.git@master#egg=simcore-settings-library&subdirectory=packages/settings-library
